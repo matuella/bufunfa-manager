@@ -32,3 +32,7 @@ ionic run android
 ```bash
 ionic serve
 ```
+
+**Obs.1**.:To do this application, I've followed the course done by [Anso Dev](https://www.youtube.com/channel/UCeEY4eHe6kKDzfa9TH3RjVw).
+
+**Obs.2**.:The course can be found [here](https://www.youtube.com/playlist?list=PLpP8rO2FXVXQ1rg4Xc-r52xlSMDGOjO-X), keep in mind that it's on PT-BR language.
