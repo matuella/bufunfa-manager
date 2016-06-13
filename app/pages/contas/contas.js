@@ -1,6 +1,8 @@
-import {Page, Modal, NavController} from 'ionic-angular';
+import {Page, Modal, NavController, Alert} from 'ionic-angular';
 import {DAOContas} from '../../dao/dao-contas';
 import {ModalContasPage} from '../modal-contas/modal-contas';
+import {Toast} from 'ionic-native';
+
 
 @Page({
   templateUrl: 'build/pages/contas/contas.html'
@@ -24,9 +26,17 @@ export class ContasPage {
     let modal = Modal.create(ModalContasPage);
 
     modal.onDismiss((data)=>{
-      this.dao.insert(data, (conta) =>{
-        this.listContas.push(conta);
-      });
+      if(data){
+        this.dao.insert(data, (conta) =>{
+          this.listContas.push(conta);
+
+          Toast.showShortBottom("Bill succesfully saved!").subscribe(
+            (toast) => {
+              console.log(toast);
+            }
+          );
+        });
+      }
     });
 
     this.nav.present(modal);
@@ -36,17 +46,45 @@ export class ContasPage {
     let modal = Modal.create(ModalContasPage, {parametro: conta});
 
     modal.onDismiss((data)=>{
-      this.dao.edit(data, (conta)=>{
-      });
+      if(data){
+        this.dao.edit(data, (conta)=>{
+          Toast.showShortBottom("Bill succesfully edited!").subscribe(
+            (toast) => {
+              console.log(toast);
+            }
+          );
+        });
+      }
     });
 
     this.nav.present(modal);
   }
 
   delete(conta){
-    this.dao.delete(conta, (conta)=>{
-      let pos = this.listContas.indexOf(conta);
-      this.listContas.splice(pos, 1);
+    let confirm = Alert.create({
+      title: "Deletion",
+      body: "Do you really want to delete "+ conta.descricao + "?",
+      buttons: [
+        {
+          text: "Yes",
+          handler: () => {
+            this.dao.delete(conta, (conta)=>{
+              let pos = this.listContas.indexOf(conta);
+              this.listContas.splice(pos, 1);
+              Toast.showShortBottom("Bill deleted!").subscribe(
+                (toast) => {
+                  console.log(toast);
+                }
+              );
+            });
+          }
+        },
+        {
+          text: "No"
+        }
+      ]
     });
+
+    this.nav.present(confirm);
   }
 }
